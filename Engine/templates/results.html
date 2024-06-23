@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Search Results</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #1a1a1a;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            width: 80%;
+            max-width: 800px;
+            margin: 50px auto;
+            text-align: center;
+            background-color: #333;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            overflow: hidden;
+            overflow-y: auto;
+        }
+        h1 {
+            margin: 20px 0;
+            color: #fff;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+            text-align: left;
+            margin-top: 20px;
+            max-height: 500px; 
+            overflow: auto;
+        }
+        li {
+            background-color: #444;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            word-wrap: break-word;
+            white-space: pre-wrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        li:hover {
+            background-color: #555;
+        }
+        .pagination {
+            margin-top: 20px;
+        }
+        .pagination a {
+            color: #007bff;
+            text-decoration: none;
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 5px;
+            margin: 0 4px;
+        }
+        .pagination a.active {
+            background-color: #007bff;
+            color: #fff;
+        }
+        .pagination a:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Search Results for "{{ query }}"</h1>
+        {% if results %}
+            <ul>
+                {% for result in results %}
+                    <li>
+                        <strong>File:</strong> {{ result.file }}<br>
+                        <strong>Line Number:</strong> {{ result.line_number }}<br>
+                        <strong>Line:</strong> {{ result.line }}
+                    </li>
+                {% endfor %}
+            </ul>
+            {% if total_pages > 1 %}
+                <div class="pagination">
+                    {% if page > 1 %}
+                        <a href="?query={{ query }}&page={{ page - 1 }}">Previous</a>
+                    {% endif %}
+                    {% for p in range(1, total_pages + 1) %}
+                        {% if p == page %}
+                            <a class="active" href="?query={{ query }}&page={{ p }}">{{ p }}</a>
+                        {% else %}
+                            <a href="?query={{ query }}&page={{ p }}">{{ p }}</a>
+                        {% endif %}
+                    {% endfor %}
+                    {% if page < total_pages %}
+                        <a href="?query={{ query }}&page={{ page + 1 }}">Next</a>
+                    {% endif %}
+                </div>
+            {% endif %}
+        {% else %}
+            <p>No results found.</p>
+        {% endif %}
+        <a href="/">Back to search</a>
+    </div>
+</body>
+</html>
+
